@@ -515,7 +515,7 @@ html, body {
      benefits more from the extra width (bigger, more legible cells) than
      it loses from being very slightly less aligned with the text above it. */
   .puzzle-area {
-    padding: 0 12px 12px;
+    padding: 0 13px 12px;
   }
 
   .static-content {
@@ -546,7 +546,9 @@ html, body {
   }
 
   .bottom-bar {
-    padding: 0 12px;
+    /* Matches .puzzle-area's mobile side padding so the checklist and the
+       grid below it share the same horizontal insets. */
+    padding: 0 13px;
     gap: 16px;
   }
 
@@ -561,10 +563,20 @@ html, body {
     padding: 10px 8px;
   }
 
+  /* flex-wrap's row-splitting is width-dependent — at some mobile widths
+     (e.g. iPhone 14, 390px) it fits 5 chips on the first row, stretching
+     nearly edge-to-edge; at others (e.g. iPhone SE, 375px) it naturally
+     wraps to 3 comfortable rows. A fixed 3-column grid makes the 3-row
+     layout deterministic across every mobile width instead of leaving it
+     up to how much happens to fit. */
   .checklist {
-    flex-wrap: wrap;
-    gap: 10px 16px;
-    min-height: 70px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-items: center;
+    align-items: center;
+    column-gap: 8px;
+    row-gap: 12px;
+    min-height: 108px;
   }
 
   /* Centered rather than left-hugged — a left-aligned stack of "contact
@@ -575,6 +587,13 @@ html, body {
     text-align: center;
     gap: 8px;
     padding: 24px 12px;
+  }
+
+  /* On the word-search page specifically (footer directly follows the
+     grid here, not on hello.html's bio layout), match the 32px nav-to-
+     tagline gap above — the flex gap alone only gives 12px otherwise. */
+  .puzzle-area + .site-footer {
+    margin-top: 20px;
   }
 
   .site-footer__contact {
