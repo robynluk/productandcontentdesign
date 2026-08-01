@@ -48,23 +48,63 @@ html, body {
 .static-content {
   flex: 1 1 auto;
   background: var(--grid-bg);
-  padding: 76px 56px 56px;
+  padding: 76px 72px 56px;
   display: flex;
   justify-content: center;
+  /* Without this, flex's default align-items:stretch makes .bio-layout
+     fill the section's full height instead of just its content height —
+     which then breaks .bio's vertical centering against the photo, since
+     it'd be centering within that oversized stretched box instead. */
+  align-items: flex-start;
+}
+
+.bio-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 48px;
+  /* No width:100% here on purpose — .bio-layout should shrink-wrap its
+     content (photo + gap + .bio's own capped width) so .static-content's
+     justify-content:center actually centers the whole photo+text unit as
+     a group, instead of stretching edge-to-edge and leaving the content
+     stuck flush against the left side of that wide box. */
+}
+
+.bio-photo {
+  flex: 0 0 280px;
+  margin: 0;
+}
+
+.bio-photo img {
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+  display: block;
 }
 
 .bio {
-  max-width: 760px;
+  flex: 1 1 auto;
+  align-self: center;
+  max-width: 700px;
   width: 100%;
   font-family: 'Open Sans', sans-serif;
   font-weight: 300;
-  font-size: 24px;
+  font-size: 15px;
   line-height: 1.6;
   color: var(--ink);
 }
 
 .bio p {
   margin: 0 0 28px;
+}
+
+/* Without this, the last paragraph's own bottom margin still counts toward
+   .bio's total box height with no visible content to show for it — since
+   .bio is vertically centered as a whole box (align-self:center, below),
+   that invisible trailing space pushes the actually-visible text above
+   true center. Removing it is what makes the centering correct, not a
+   nudge value. */
+.bio p:last-child {
+  margin-bottom: 0;
 }
 
 .bio a {
@@ -130,6 +170,13 @@ html, body {
   font-size: 32px;
   line-height: 1.4;
   color: var(--ink);
+}
+
+/* Forces "Email me." onto its own line only where it's needed to avoid a
+   widow/orphan (mobile) — hidden by default so tablet/desktop keep their
+   natural (already widow-free) wrap instead of an unnecessary extra line. */
+.tagline .mobile-break {
+  display: none;
 }
 
 .tagline a {
@@ -370,7 +417,19 @@ html, body {
   }
 
   .static-content {
-    padding: 56px 28px 28px;
+    padding: 56px 72px 28px;
+  }
+
+  /* Narrower tablet widths squeeze .bio's column enough that its text can
+     wrap taller than the photo, breaking the vertical-centering — the
+     smaller font trims line count to compensate for the wider gap here,
+     without touching the photo itself. */
+  .bio-layout {
+    gap: 40px;
+  }
+
+  .bio {
+    font-size: 14px;
   }
 
   .bottom-bar {
@@ -405,20 +464,43 @@ html, body {
 
   .tagline {
     margin: 20px 0 0;
-    padding: 0 12px;
+    padding: 0 24px;
     font-size: 20px;
   }
 
+  .tagline .mobile-break {
+    display: inline;
+  }
+
   .puzzle-area {
-    padding: 0 12px 12px;
+    padding: 0 24px 24px;
   }
 
   .static-content {
-    padding: 20px 12px;
+    padding: 24px 24px;
   }
 
+  .bio-layout {
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .bio-photo {
+    flex: 0 0 auto;
+    max-width: 180px;
+    width: 100%;
+    /* Cancel the desktop/tablet optical-alignment nudge — mobile stacks
+       the photo above the text, so there's no baseline to align against,
+       and this keeps the top/side/gap spacing genuinely equal. */
+    margin: 0;
+  }
+
+  /* Tablet's 14px font-size override would otherwise cascade down here
+     too, reintroducing a size jump across the breakpoint that was
+     deliberately removed earlier. */
   .bio {
-    font-size: 16px;
+    font-size: 15px;
   }
 
   .bottom-bar {
@@ -448,8 +530,8 @@ html, body {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 12px;
-    padding: 20px 12px;
+    gap: 8px;
+    padding: 24px 12px;
   }
 
   .site-footer__contact {
