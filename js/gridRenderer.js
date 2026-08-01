@@ -17,6 +17,13 @@ export class GridRenderer {
     this.dragLine = document.createElementNS(SVG_NS, "line");
     this.dragLine.setAttribute("class", "drag-line");
     this.svg.appendChild(this.dragLine);
+
+    // On mobile/tablet (touch) the drag-line's zero-length "dot" (a round
+    // line-cap only a few px across) is hard to see, so the first selected
+    // letter gets an actual circle there instead — see showDragLine below.
+    this.startCircle = document.createElementNS(SVG_NS, "circle");
+    this.startCircle.setAttribute("class", "start-circle");
+    this.svg.appendChild(this.startCircle);
   }
 
   fitToContainer(rows, cols) {
@@ -25,7 +32,11 @@ export class GridRenderer {
     const padX = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
     const padY = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
     const availW = parent.clientWidth - padX;
-    const availH = parent.clientHeight - padY;
+    // On mobile the page scrolls rather than being locked to one viewport
+    // height, so let available width alone drive cell size there instead
+    // of it being capped by whatever height happens to be left over —
+    // bigger, more legible cells are worth a bit of extra scrolling.
+    const availH = window.innerWidth <= 640 ? Infinity : parent.clientHeight - padY;
 
     const { cellSize, gridWidth, gridHeight } = computeCellLayout(availW, availH, rows, cols);
     this.cellSize = cellSize;
@@ -113,7 +124,11 @@ export class GridRenderer {
     const start = this.cellCenter(placement.row, placement.col);
     const endCell = placement.cells[placement.cells.length - 1];
     const end = this.cellCenter(endCell.r, endCell.c);
-    const halfWidth = this.cellSize * 0.3;
+    // Slightly wider on mobile/tablet (touch, fingers are less precise than
+    // a mouse cursor) — at that size the capsule otherwise hugs the letters
+    // closely enough to look cramped against them.
+    const isTouch = window.innerWidth <= 1024;
+    const halfWidth = this.cellSize * (isTouch ? 0.36 : 0.3);
     const extend = this.cellSize * 0.22;
     return buildCapsulePath(start.x, start.y, end.x, end.y, halfWidth, extend);
   }
@@ -151,6 +166,17 @@ export class GridRenderer {
   }
 
   showDragLine(p1, p2) {
+    const isDot = p1.x === p2.x && p1.y === p2.y;
+    if (isDot && window.innerWidth <= 1024) {
+      this.dragLine.style.opacity = "0";
+      this.startCircle.setAttribute("cx", p1.x);
+      this.startCircle.setAttribute("cy", p1.y);
+      this.startCircle.setAttribute("r", this.cellSize * 0.4);
+      this.startCircle.style.opacity = "1";
+      return;
+    }
+
+    this.startCircle.style.opacity = "0";
     this.dragLine.setAttribute("x1", p1.x);
     this.dragLine.setAttribute("y1", p1.y);
     this.dragLine.setAttribute("x2", p2.x);
@@ -160,5 +186,6 @@ export class GridRenderer {
 
   hideDragLine() {
     this.dragLine.style.opacity = "0";
+    this.startCircle.style.opacity = "0";
   }
 }

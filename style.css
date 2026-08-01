@@ -122,6 +122,14 @@ html, body {
      the box's own right inset by that much lines the visible text up at
      the same 36px inset as the logo's text on the left. */
   padding: 20px 12px 20px 36px;
+  /* Without a fixed height, the nav's box height is derived from the
+     logo text's rendered line height — which measurably differs by a few
+     px between the very first paint and its settled state (web font
+     metrics settling in), causing the whole nav to visibly grow/shrink
+     once on load. A fixed height (matching the settled state, confirmed
+     via direct measurement) keeps the box stable regardless; contents
+     stay vertically centered within it via align-items:center above. */
+  height: 85px;
   background: #fff;
   box-shadow: 0px 4px 18px 0px rgba(0, 0, 0, 0.12);
   position: relative;
@@ -258,6 +266,16 @@ html, body {
   opacity: 0;
 }
 
+/* Stands in for .drag-line's zero-length "dot" on mobile, where that dot's
+   fixed 3px size reads as basically invisible — an actual circle around
+   the first selected letter instead. */
+.overlay .start-circle {
+  fill: none;
+  stroke: var(--purple);
+  stroke-width: 2;
+  opacity: 0;
+}
+
 .bottom-bar {
   flex: 0 0 auto;
   display: flex;
@@ -345,6 +363,13 @@ html, body {
   align-items: center;
   gap: 20px;
   justify-content: center;
+  /* The checklist ships empty in the HTML and only gets its chips from
+     main.js a moment later — without a reserved height, that first empty
+     frame gives .puzzle-area extra room it then has to give back once the
+     chips land, visible as the grid shrinking right after load. Reserving
+     the settled single-row height here (measured directly) up front
+     avoids that handoff entirely. */
+  min-height: 17px;
 }
 
 .checklist .chip {
@@ -408,6 +433,13 @@ html, body {
    (100vh/overflow:hidden, single-row toggle/checklist/footer) still fits,
    so only side padding gets dialed back here. */
 @media (max-width: 1024px) {
+  /* Lighter than the desktop stroke — on touch devices (tablet and mobile,
+     both covered by this max-width) the default weight reads as a bit
+     heavy against the letters. */
+  .overlay .capsule {
+    stroke-width: 1.3;
+  }
+
   .tagline {
     padding: 0 28px;
   }
@@ -435,6 +467,12 @@ html, body {
   .bottom-bar {
     padding: 0 16px;
   }
+
+  /* Tablet widths wrap the checklist to more than one row — reserve that
+     settled height too (same reasoning as the base rule above). */
+  .checklist {
+    min-height: 53px;
+  }
 }
 
 /* Mobile: the desktop layout genuinely breaks below this width (grid runs
@@ -452,6 +490,7 @@ html, body {
 
   .nav {
     padding: 12px 0;
+    height: 66px;
   }
 
   .nav__logo {
@@ -472,8 +511,11 @@ html, body {
     display: inline;
   }
 
+  /* Deliberately tighter than the nav/tagline's 24px inset above — the grid
+     benefits more from the extra width (bigger, more legible cells) than
+     it loses from being very slightly less aligned with the text above it. */
   .puzzle-area {
-    padding: 0 24px 24px;
+    padding: 0 12px 12px;
   }
 
   .static-content {
@@ -522,6 +564,7 @@ html, body {
   .checklist {
     flex-wrap: wrap;
     gap: 10px 16px;
+    min-height: 70px;
   }
 
   /* Centered rather than left-hugged — a left-aligned stack of "contact
