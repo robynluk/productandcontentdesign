@@ -77,7 +77,11 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 40px;
+  /* Right side is 24px tighter than the left: .pill's own 24px horizontal
+     padding insets "Hello"'s visible text from its box edge, so trimming
+     the box's own right inset by that much lines the visible text up at
+     the same 36px inset as the logo's text on the left. */
+  padding: 20px 12px 20px 36px;
   background: #fff;
   box-shadow: 0px 4px 18px 0px rgba(0, 0, 0, 0.12);
   position: relative;
@@ -223,7 +227,7 @@ html, body {
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  padding: 24px 40px;
+  padding: 24px 36px;
   background: #fff;
   font-family: 'Open Sans', sans-serif;
   font-weight: 300;
@@ -290,7 +294,7 @@ html, body {
 
 .checklist {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   align-items: center;
   gap: 20px;
   justify-content: center;
@@ -350,4 +354,111 @@ html, body {
   color: #fff;
   font-weight: 700;
   cursor: pointer;
+}
+
+/* Tablet: the desktop layout's fixed 56px/40px side paddings are too wide
+   once the viewport itself shrinks toward this range — everything else
+   (100vh/overflow:hidden, single-row toggle/checklist/footer) still fits,
+   so only side padding gets dialed back here. */
+@media (max-width: 1024px) {
+  .tagline {
+    padding: 0 28px;
+  }
+
+  .puzzle-area {
+    padding: 0 28px 28px;
+  }
+
+  .static-content {
+    padding: 56px 28px 28px;
+  }
+
+  .bottom-bar {
+    padding: 0 16px;
+  }
+}
+
+/* Mobile: the desktop layout genuinely breaks below this width (grid runs
+   off-screen, toggle/checklist/footer rows have nowhere to wrap), so this
+   switches to a normal scrolling page with tighter, stacked chrome. The
+   grid itself also gets narrower/taller dimensions, set responsively in
+   js/main.js (ROWS/COLS), to match this breakpoint. */
+@media (max-width: 640px) {
+  .page {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+    gap: 12px;
+  }
+
+  .nav {
+    padding: 12px 0;
+  }
+
+  .nav__logo {
+    /* .pill's own 24px horizontal padding insets "Hello"'s visible text
+       further from the edge than the logo's bare text — match it so both
+       read as equally far from the edge, not lopsided. */
+    margin-left: 24px;
+    font-size: 24px;
+  }
+
+  .tagline {
+    margin: 20px 0 0;
+    padding: 0 12px;
+    font-size: 20px;
+  }
+
+  .puzzle-area {
+    padding: 0 12px 12px;
+  }
+
+  .static-content {
+    padding: 20px 12px;
+  }
+
+  .bio {
+    font-size: 16px;
+  }
+
+  .bottom-bar {
+    padding: 0 12px;
+    gap: 16px;
+  }
+
+  .toggle {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .toggle__option {
+    flex: 1;
+    font-size: 12px;
+    padding: 10px 8px;
+  }
+
+  .checklist {
+    flex-wrap: wrap;
+    gap: 10px 16px;
+  }
+
+  /* Centered rather than left-hugged — a left-aligned stack of "contact
+     row, then copyright" read like an accident, not a deliberate layout. */
+  .site-footer {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+    padding: 20px 12px;
+  }
+
+  .site-footer__contact {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .modal__card {
+    padding: 24px;
+  }
 }

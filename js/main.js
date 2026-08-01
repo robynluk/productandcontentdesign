@@ -5,16 +5,29 @@ import { InteractionController } from "./interactionController.js";
 
 // Shared by both modes so the grid box, cell size, and font size never
 // change when the toggle is flipped — only the letters do. Wider-than-tall
-// on purpose: the puzzle area's height budget is much tighter than its
-// width budget, so fewer rows (more columns) lets cells grow bigger within
-// that fixed vertical space.
-const ROWS = 10;
-const COLS = 20;
+// on desktop on purpose: the puzzle area's height budget is much tighter
+// than its width budget there, so fewer rows (more columns) lets cells grow
+// bigger within that fixed vertical space. Portrait phones/tablets flip
+// that ratio (width is the tight budget), so they get taller/narrower grids
+// — chosen once at load to match the CSS breakpoints in style.css. This is
+// decided once, not live-updated on resize/rotation (see refit() below).
+function getGridDims() {
+  const w = window.innerWidth;
+  // Both dimensions need to stay near-square and >=13 (the longest company
+  // word, ANALOGDEVICES) at mobile widths — .puzzle-area's flex:1 box ends
+  // up tall relative to its width there, so a wide-and-short grid (like the
+  // desktop 10x20) would render tiny, cramped cells instead of using that
+  // space.
+  if (w <= 640) return { rows: 14, cols: 14 };
+  if (w <= 1024) return { rows: 12, cols: 16 };
+  return { rows: 10, cols: 20 };
+}
+const { rows: ROWS, cols: COLS } = getGridDims();
 
 const NEXT_DIFFICULTY = { base: "intermediate", intermediate: "hard", hard: "hard" };
 const MODAL_COPY = {
   base: { title: "Way to go", subtitle: "When was the last time you were in flow state?", cta: "Next level" },
-  intermediate: { title: "You're good (too)", subtitle: "Flow state feels pretty good, doesn't it?", cta: "Next level" },
+  intermediate: { title: "You're pretty good", subtitle: "Flow state feels pretty good, doesn't it?", cta: "Next level" },
   hard: { title: "You're really good", subtitle: "But most importantly, I hope you're having a good time", cta: "Last level" },
 };
 
