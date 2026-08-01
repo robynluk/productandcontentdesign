@@ -1,0 +1,353 @@
+/* Arca Majora 3 (Bold) is a commercial display font (OH no Type Co) — not
+   available via Google Fonts. Drop a licensed woff2 file at assets/fonts/
+   (see that folder's README) and this will pick it up automatically; until
+   then the logo falls back to Poppins/Open Sans. */
+@font-face {
+  font-family: "Arca Majora 3";
+  src: url("assets/fonts/ArcaMajora3-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  --purple: #A36FB8;
+  --purple-soft: rgba(163, 111, 184, 0.12);
+  --ink: #474754;
+  --bg: #f5f2fa;
+  --grid-bg: #F6F1F8;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Open Sans', sans-serif;
+}
+
+.page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow: hidden;
+}
+
+/* Used by pages whose content is naturally longer than one viewport (bio)
+   — same nav/footer chrome as the home page, but scrolls normally instead
+   of forcing everything above the fold. */
+.page--scroll {
+  height: auto;
+  min-height: 100vh;
+  overflow: visible;
+  gap: 0;
+}
+
+.static-content {
+  flex: 1 1 auto;
+  background: var(--grid-bg);
+  padding: 76px 56px 56px;
+  display: flex;
+  justify-content: center;
+}
+
+.bio {
+  max-width: 760px;
+  width: 100%;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;
+  font-size: 24px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+.bio p {
+  margin: 0 0 28px;
+}
+
+.bio a {
+  color: var(--purple);
+  text-decoration: underline;
+}
+
+.nav {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 40px;
+  background: #fff;
+  box-shadow: 0px 4px 18px 0px rgba(0, 0, 0, 0.12);
+  position: relative;
+  z-index: 5;
+}
+
+.nav__logo {
+  font-family: "Arca Majora 3", "Poppins", "Open Sans", sans-serif;
+  font-weight: 700;
+  font-size: 36px;
+  color: var(--purple);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.nav__logo:hover {
+  color: #111;
+}
+
+.nav__links {
+  display: flex;
+  gap: 12px;
+}
+
+.pill {
+  padding: 10px 24px;
+  border-radius: 100px;
+  background: #fff;
+  color: #111;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.pill:hover {
+  color: var(--purple);
+}
+
+.tagline {
+  flex: 0 0 auto;
+  margin: 56px 0 0;
+  padding: 0 56px;
+  text-align: center;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;
+  font-size: 32px;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.tagline a {
+  color: var(--purple);
+  text-decoration: underline;
+}
+
+.puzzle-area {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  /* This copy's layout puts the grid directly above the footer (no toggle in
+     between), so its trailing gap is bumped to match the nav-to-intro gap. */
+  padding: 0 56px 56px;
+  background: var(--grid-bg);
+}
+
+.grid-wrap {
+  position: relative;
+}
+
+.grid-wrap.is-interactive {
+  cursor: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyOCIgaGVpZ2h0PSIyOCI+PHRleHQgeD0iMTMiIHk9IjE5IiBmb250LXNpemU9IjIyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7inI/vuI88L3RleHQ+PC9zdmc+") 12 19, pointer;
+}
+
+.letters {
+  display: grid;
+}
+
+.letters .cell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 300;
+  text-transform: uppercase;
+  color: var(--ink);
+  user-select: none;
+  border-radius: 6px;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.letters .cell.is-shake {
+  animation: shake 0.3s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.overlay .capsule {
+  fill: var(--purple);
+  fill-opacity: 0;
+  stroke: var(--purple);
+  stroke-width: 1.75;
+  transition: fill-opacity 1.4s ease-out;
+}
+
+.overlay .capsule.is-filled {
+  fill-opacity: 0.1;
+}
+
+.overlay .drag-line {
+  stroke: var(--purple);
+  stroke-width: 3;
+  stroke-linecap: round;
+  opacity: 0;
+}
+
+.bottom-bar {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  padding: 0 24px;
+}
+
+.site-footer {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px 40px;
+  background: #fff;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.site-footer__copyright {
+  margin: 0;
+}
+
+.site-footer__copyright a {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.site-footer__copyright a:hover {
+  color: var(--purple);
+}
+
+.site-footer__contact {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.site-footer__contact a {
+  color: var(--ink);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.site-footer__contact a:hover {
+  color: var(--purple);
+}
+
+.toggle {
+  display: inline-flex;
+  border: 2px solid var(--purple);
+  border-radius: 100px;
+  padding: 4px;
+  gap: 4px;
+  background: #fff;
+}
+
+.toggle__option {
+  border: none;
+  background: transparent;
+  color: var(--purple);
+  font-family: inherit;
+  font-weight: 700;
+  padding: 10px 20px;
+  border-radius: 100px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.toggle__option.is-active {
+  background: var(--purple);
+  color: #fff;
+}
+
+.checklist {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 20px;
+  justify-content: center;
+}
+
+.checklist .chip {
+  color: var(--purple);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.checklist .chip.is-found {
+  text-decoration: line-through;
+  opacity: 0.45;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(30, 20, 45, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.modal[hidden] {
+  display: none;
+}
+
+.modal__card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 32px 40px;
+  text-align: center;
+  max-width: 480px;
+  width: 90%;
+  min-height: 224px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.modal__card h2 {
+  color: var(--ink);
+  margin: 0 0 8px;
+}
+
+.modal__restart {
+  align-self: center;
+  margin-top: 8px;
+  padding: 10px 24px;
+  border-radius: 100px;
+  border: none;
+  background: var(--purple);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
