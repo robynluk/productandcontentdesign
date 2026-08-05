@@ -86,13 +86,13 @@ function setMode(next) {
   if (next === "auto") {
     interaction.stop();
     wrap.classList.remove("is-interactive");
-    checklistEl.style.visibility = "hidden";
+    checklistEl.classList.add("is-hidden");
     winModal.hidden = true;
     anim.start({ shuffle: true });
   } else {
     anim.stop();
     wrap.classList.add("is-interactive");
-    checklistEl.style.visibility = "visible";
+    checklistEl.classList.remove("is-hidden");
     interaction.start({ shuffle: true, difficulty: "base" });
   }
 }
@@ -129,12 +129,13 @@ window.addEventListener("resize", () => {
 });
 
 // Populate the checklist with its real content immediately, before any mode
-// switch, so it always occupies the same height — otherwise it starts at
-// zero height (visibility:hidden preserves layout space, but an empty
-// element still has none) and only grows once manual mode has been entered
-// at least once, permanently shrinking the grid's available space from then on.
+// switch, so it always occupies the same height on desktop/tablet (where its
+// space stays reserved even while hidden) — otherwise it starts at zero
+// height and only grows once manual mode has been entered at least once,
+// permanently shrinking the grid's available space from then on. The
+// checklist starts with "is-hidden" already in the HTML, so no JS is needed
+// here to hide it initially.
 renderChecklist(companyTokens, new Set());
-checklistEl.style.visibility = "hidden";
 anim.start();
 
 // The very first fitToContainer above can run before all subresources

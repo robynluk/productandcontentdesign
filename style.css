@@ -372,6 +372,15 @@ html, body {
   min-height: 17px;
 }
 
+/* Auto mode's checklist stays present but invisible — on desktop/tablet
+   its space must stay reserved too (cell size there is height-sensitive,
+   so removing the reservation would resize the grid on every mode
+   switch). Mobile overrides this to actually collapse the space instead
+   — see the mobile media query below. */
+.checklist.is-hidden {
+  visibility: hidden;
+}
+
 .checklist .chip {
   color: var(--purple);
   font-size: 12px;
@@ -577,6 +586,16 @@ html, body {
     column-gap: 8px;
     row-gap: 12px;
     min-height: 108px;
+  }
+
+  /* Unlike desktop/tablet, mobile's grid cell size is driven purely by
+     available width (see fitToContainer in gridRenderer.js), not height —
+     so collapsing the checklist's reserved space here can never resize
+     the grid, only reposition it. This closes the gap above the grid in
+     auto mode; toggling to manual mode pushes the grid back down to
+     make room, with the grid itself staying pixel-identical throughout. */
+  .checklist.is-hidden {
+    display: none;
   }
 
   /* Centered rather than left-hugged — a left-aligned stack of "contact
