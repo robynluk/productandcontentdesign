@@ -1,7 +1,5 @@
-/* Arca Majora 3 (Bold) is a commercial display font (OH no Type Co) — not
-   available via Google Fonts. Drop a licensed woff2 file at assets/fonts/
-   (see that folder's README) and this will pick it up automatically; until
-   then the logo falls back to Poppins/Open Sans. */
+/* Arca Majora 3 (Bold) is a commercial display font (OH no Type Co),
+   licensed and included here as assets/fonts/ArcaMajora3-Bold.woff2. */
 @font-face {
   font-family: "Arca Majora 3";
   src: url("assets/fonts/ArcaMajora3-Bold.woff2") format("woff2");

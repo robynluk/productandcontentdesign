@@ -1,11 +1,6 @@
-Arca Majora 3 (Bold) is a commercial display font from OH no Type Co — it isn't on Google
-Fonts, so it can't be auto-linked the way Open Sans is.
+Arca Majora 3 (OH no Type Co) — licensed, used for the "Robyn Luk" nav logo.
 
-If you have a license (e.g. an Adobe Fonts / Typekit subscription or purchased desktop
-license), export/convert the Bold weight to woff2 and drop it here as:
-
-  ArcaMajora3-Bold.woff2
-
-style.css already has an @font-face pointing at that exact path, so it'll pick it up
-automatically once the file exists — no other changes needed. Until then, the "Robyn Luk"
-logo falls back to Poppins / Open Sans.
+ArcaMajora3-Bold.woff2 is loaded via the @font-face rule in style.css.
+ArcaMajora3-Heavy.woff2 is also included but not currently referenced by
+any CSS — add a second @font-face block (font-weight matching how it's
+used) if a heavier weight is ever needed elsewhere.
